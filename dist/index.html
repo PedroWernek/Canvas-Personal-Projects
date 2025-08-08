@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home com Canvas de Fundo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        padding: 50px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #ffffff;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 2px 2px 5px #000;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-rows: auto;
+        gap: 20px;
+        width: 100%;
+        max-width: 1200px;
+      }
+
+      .card {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: #000000;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+        &p {
+          font-size: 0.9rem;
+        }
+        &h2 {
+          margin-bottom: 10px;
+        }
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+          transform: scale(1.03);
+        }
+      }
+    </style>
+  <link rel="icon" href="favicon.ico"></head>
+  <body>
+    <canvas></canvas>
+
+    <div class="content">
+      <h1>Bem-vindo</h1>
+      <div class="grid-container">
+        <a class="card" href="./js/circular-motion/circular-motion.html">
+          <img src="" alt="Ícone 1" />
+          <h2>Teste de gravidade</h2>
+        </a>
+        <!-- <a class="card" href="pagina2.html">
+          <h2>Página 2</h2>
+          <p>Descrição da página 2</p>
+        </a>
+        <a class="card" href="pagina3.html">
+          <h2>Página 3</h2>
+          <p>Descrição da página 3</p>
+        </a> -->
+      </div>
+    </div>
+
+    <script type="module" src="./canvas.js"></script>
+  <script src="./js/canvas.bundle.js"></script></body>
+</html>
