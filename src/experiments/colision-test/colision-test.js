@@ -1,4 +1,4 @@
-import utils from "../utils";
+import utils from "../utils.js";
 import setupCanvas from "../../common/canvas-setup.js";
 
 const { canvas, c } = setupCanvas();

@@ -1,4 +1,4 @@
-import utils from "./js/utils";
+import utils from "./js/utils.js";
 
 import setupCanvas from "../../common/canvas-setup.js";
 
