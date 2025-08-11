@@ -1,8 +1,9 @@
 import utils from "../utils";
 import Particle from "./particle";
 
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d");
+import setupCanvas from "../../common/canvas-setup.js";
+
+const { canvas, c } = setupCanvas();
 
 let colors = ["#2185C5", "#7ECEFD", "#ffbb3eff", "#FF7F66"];
 

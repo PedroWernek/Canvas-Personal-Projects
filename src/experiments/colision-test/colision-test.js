@@ -1,7 +1,7 @@
 import utils from "../utils";
+import setupCanvas from "../../common/canvas-setup.js";
 
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d");
+const { canvas, c } = setupCanvas();
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;

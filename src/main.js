@@ -1,7 +1,7 @@
-import Mouse from "./models/mouse.js";
-import FloatingCircle from "./models/floatingCircle.js";
+import FloatingCircle from "../../aaaa/models/floatingCircle.js";
 
 let canvas = document.querySelector("canvas");
+
 let width = window.innerWidth;
 let height = window.innerHeight;
 canvas.width = width;

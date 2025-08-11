@@ -96,4 +96,4 @@ function resolveCollision(particle, otherParticle) {
   }
 }
 
-module.exports = { rotate, resolveCollision };
+export { rotate, resolveCollision };

@@ -1,13 +1,11 @@
-import utils, { randomColor, randomIntFromRange } from "../utils";
+import utils from "../utils";
+import setupCanvas from "../../common/canvas-setup.js";
 
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d");
+const { canvas, c } = setupCanvas();
 
-let gravity = 1;
-let friction = 0.9;
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+const GRAVITY = 1;
+const FRICTION = 0.9;
+const BALL_COUNT = 100;
 
 const mouse = {
   x: innerWidth / 2,
@@ -50,16 +48,16 @@ class Ball {
 
   update() {
     if (this.y + this.radius + this.velY > canvas.height) {
-      this.velY = -this.velY * friction;
-      this.velX *= friction;
+      this.velY = -this.velY * FRICTION;
+      this.velX *= FRICTION;
     } else {
-      this.velY += gravity;
+      this.velY += GRAVITY;
     }
     if (
       this.x + this.radius + this.velX > canvas.width ||
       this.x - this.radius + this.velX < 0
     ) {
-      this.velX = -this.velX * friction;
+      this.velX = -this.velX * FRICTION;
     }
 
     this.x += this.velX;
@@ -72,13 +70,13 @@ class Ball {
 let ballArray = [];
 function init(mouseX, mouseY) {
   ballArray = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < BALL_COUNT; i++) {
     let radius = Math.random() * 20 + 10;
-    let x = randomIntFromRange(radius, canvas.width - radius);
-    let y = randomIntFromRange(0, canvas.height - radius);
-    let velX = randomIntFromRange(-10, 10);
-    let velY = randomIntFromRange(-10, 10);
-    let color = randomColor(colors);
+    let x = utils.randomIntFromRange(radius, canvas.width - radius);
+    let y = utils.randomIntFromRange(0, canvas.height - radius);
+    let velX = utils.randomIntFromRange(-10, 10);
+    let velY = utils.randomIntFromRange(-10, 10);
+    let color = utils.randomColor(colors);
     ballArray.push(new Ball(x, y, radius, velX, velY, color));
   }
 }
