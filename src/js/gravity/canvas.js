@@ -3,8 +3,8 @@ import utils, { randomColor, randomIntFromRange } from "../utils";
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 
-var gravity = 1;
-var friction = 0.9;
+let gravity = 1;
+let friction = 0.9;
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -69,16 +69,16 @@ class Ball {
 }
 
 // Implementation
-var ballArray = [];
+let ballArray = [];
 function init(mouseX, mouseY) {
   ballArray = [];
   for (let i = 0; i < 100; i++) {
-    var radius = Math.random() * 20 + 10;
-    var x = randomIntFromRange(radius, canvas.width - radius);
-    var y = randomIntFromRange(0, canvas.height - radius);
-    var velX = randomIntFromRange(-10, 10);
-    var velY = randomIntFromRange(-10, 10);
-    var color = randomColor(colors);
+    let radius = Math.random() * 20 + 10;
+    let x = randomIntFromRange(radius, canvas.width - radius);
+    let y = randomIntFromRange(0, canvas.height - radius);
+    let velX = randomIntFromRange(-10, 10);
+    let velY = randomIntFromRange(-10, 10);
+    let color = randomColor(colors);
     ballArray.push(new Ball(x, y, radius, velX, velY, color));
   }
 }

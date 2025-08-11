@@ -1,25 +1,25 @@
 import Mouse from "./models/mouse.js";
 import FloatingCircle from "./models/floatingCircle.js";
 
-var canvas = document.querySelector("canvas");
-var width = window.innerWidth;
-var height = window.innerHeight;
+let canvas = document.querySelector("canvas");
+let width = window.innerWidth;
+let height = window.innerHeight;
 canvas.width = width;
 canvas.height = height;
 
 //c = context
-var c = canvas.getContext("2d");
+let c = canvas.getContext("2d");
 
 const mouse = {
   x: innerWidth / 2,
   y: innerHeight / 2,
 };
 
-var maxRadius = 20;
-var gravity = 3;
-var dist = 40;
+let maxRadius = 20;
+let gravity = 3;
+let dist = 40;
 
-var colorArray = [
+let colorArray = [
   "23, 32, 38",
   "95, 205, 217",
   "2, 115, 115",
@@ -122,16 +122,16 @@ window.addEventListener("resize", function (event) {
   init();
 });
 
-var cicleArray = [];
+let cicleArray = [];
 
 function init() {
   cicleArray = [];
-  for (var i = 0; i < 800; i++) {
-    var radius = Math.floor(Math.random() * 10 + 1);
-    var x = Math.random() * (width - radius * 2) + radius;
-    var y = Math.random() * (height - radius * 2) + radius;
-    var dx = Math.random() - 0.5;
-    var dy = Math.random() - 0.5;
+  for (let i = 0; i < 800; i++) {
+    let radius = Math.floor(Math.random() * 10 + 1);
+    let x = Math.random() * (width - radius * 2) + radius;
+    let y = Math.random() * (height - radius * 2) + radius;
+    let dx = Math.random() - 0.5;
+    let dy = Math.random() - 0.5;
 
     cicleArray.push(new FloatingCircle(x, y, radius, dx, dy));
   }
@@ -142,7 +142,7 @@ function animate() {
 
   c.clearRect(0, 0, width, height);
 
-  for (var i = 0; i < cicleArray.length; i++) {
+  for (let i = 0; i < cicleArray.length; i++) {
     cicleArray[i].update(mouse.x, mouse.y, width, height, c);
   }
 }
