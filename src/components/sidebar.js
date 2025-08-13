@@ -1,4 +1,4 @@
-export async function buildNavbar() {
+export async function buildSidebar() {
   return `
   <nav>
       <a href="#/gravity">Gravity</a>
