@@ -1,6 +1,6 @@
 import "./style.css";
 import { renderHomePage } from "./pages/home";
-import { experiments } from "./data/experimentsLocations.js";
+import { experimentsArray } from "./data/experimentsLocations.js";
 import { buildSidebar } from "./components/Sidebar.js";
 
 const app = document.getElementById("app");
@@ -13,7 +13,7 @@ async function renderExperimentPage(path) {
     currentCleanup();
   }
 
-  const experiment = experiments[path];
+  const experiment = experimentsArray[path];
 
   /*
    * Se o experimento for nulo ou não existir
@@ -26,19 +26,26 @@ async function renderExperimentPage(path) {
   }
 
   // Cria o layout com a barra lateral e o contêiner do canvas
-  app.innerHTML = buildSidebar();
+  app.innerHTML = await buildSidebar();
 
   // Carrega o experimento na área principal
   const canvasContainer = document.getElementById("canvas-container");
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  canvasContainer.appendChild(canvas);
 
-  const module = await import(experiment.path);
-  if (module.run) {
-    currentCleanup = module.run(canvas, context);
+  if (canvasContainer) {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvasContainer.appendChild(canvas);
+
+    const module = await import(experiment.path);
+    if (module.run) {
+      currentCleanup = module.run(canvas, context);
+    }
+    document.title = experiment.title;
+  } else {
+    console.error(
+      "Erro crítico: Não foi possível encontrar #canvas-container após a renderização.",
+    );
   }
-  document.title = experiment.title;
 }
 
 // Roteador principal

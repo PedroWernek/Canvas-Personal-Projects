@@ -1,4 +1,4 @@
-export const experiments = {
+export const experimentsArray = {
   "/gravity": {
     path: "./experiments/1-gravity/gravity.js",
     title: "Gravity",
