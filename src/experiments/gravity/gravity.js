@@ -1,4 +1,4 @@
-import { randomIntFromRange, randomColor } from "../../common/utils.js";
+import { randomIntFromRange, randomColor } from "../../utils/utils.js";
 import Ball from "./Ball.js";
 
 // A função 'run' é o ponto de entrada que será chamado pelo loader principal
@@ -14,6 +14,7 @@ export function run(canvas, context) {
 
   // --- Funções ---
   function init() {
+    handleResize();
     ballArray = [];
     for (let i = 0; i < 100; i++) {
       const radius = randomIntFromRange(10, 30);
@@ -39,7 +40,6 @@ export function run(canvas, context) {
   const handleResize = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    init();
   };
 
   const handleClick = () => init();
@@ -59,7 +59,3 @@ export function run(canvas, context) {
     c.clearRect(0, 0, canvas.width, canvas.height);
   };
 }
-
-document.querySelector("#app").innerHTML = `
-  <canvas></canvas>
-`;
