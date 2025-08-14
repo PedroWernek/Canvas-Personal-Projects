@@ -1,67 +1,79 @@
 import "./style.css";
-import { renderHomePage } from "./pages/home";
+import { renderHomePage } from "./pages/home.js";
 import { experimentsArray } from "./data/experimentsLocations.js";
 import { buildSidebar } from "./components/Sidebar.js";
+
+// 1. O Vite encontra todos os módulos e cria um objeto de "carregadores".
+const experimentModules = import.meta.glob("/src/experiments/**/*.js");
 
 const app = document.getElementById("app");
 let currentCleanup = null;
 
-// Função para renderizar o layout do experimento
 async function renderExperimentPage(path) {
-  // Limpa o experimento anterior, se houver
   if (currentCleanup) {
     currentCleanup();
   }
 
   const experiment = experimentsArray[path];
 
-  /*
-   * Se o experimento for nulo ou não existir
-   * @return <not found>
-   */
   if (!experiment) {
-    app.innerHTML = `<h1>404 - Not Found</h1><a href="#">Voltar para a Home</a>`;
-    document.title = "Not Found";
+    app.innerHTML = `<h1>404 - Not Found</h1><a href="/">Voltar para a Home</a>`;
     return;
   }
 
-  // Cria o layout com a barra lateral e o contêiner do canvas
-  app.innerHTML = await buildSidebar();
+  // 2. Usamos o caminho do arquivo (ex: "/src/experiments/gravity/gravity.js")
+  // para encontrar o carregador correto no objeto que o Vite criou.
+  const modulePath = experiment.path;
+  const moduleLoader = experimentModules[modulePath];
 
-  // Carrega o experimento na área principal
-  const canvasContainer = document.getElementById("canvas-container");
+  if (!moduleLoader) {
+    console.error(`Módulo não encontrado para o caminho: ${modulePath}`);
+    app.innerHTML = `<h1>Erro ao carregar módulo</h1>`;
+    return;
+  }
+
+  app.innerHTML = buildSidebar(path);
+  const canvasContainer = app.querySelector("#canvas-container");
 
   if (canvasContainer) {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     canvasContainer.appendChild(canvas);
 
-    const module = await import(experiment.path);
-    if (module.run) {
-      currentCleanup = module.run(canvas, context);
+    try {
+      // 3. Executamos a função do carregador para importar o módulo.
+      const module = await moduleLoader();
+      if (module.run) {
+        currentCleanup = module.run(canvas, context);
+      }
+      document.title = experiment.title;
+    } catch (e) {
+      console.error(`Falha ao carregar o módulo: ${modulePath}`, e);
     }
-    document.title = experiment.title;
-  } else {
-    console.error(
-      "Erro crítico: Não foi possível encontrar #canvas-container após a renderização.",
-    );
   }
 }
 
-// Roteador principal
 function handleLocation() {
-  const path = window.location.hash.replace("#", "");
-
-  if (path === "" || path === "/") {
+  const path = window.location.pathname;
+  if (path === "/" || path === "/index.html") {
     renderHomePage(app);
   } else {
     renderExperimentPage(path);
   }
 }
 
-// Ouve as mudanças na URL
-window.addEventListener("hashchange", handleLocation);
-window.addEventListener("popstate", handleLocation); // Lida com o botão de voltar do navegador
+const navigate = (path) => {
+  window.history.pushState({}, "", path);
+  handleLocation();
+};
 
-// Carrega a rota inicial
+document.addEventListener("click", (e) => {
+  const link = e.target.closest("a");
+  if (link && link.href.startsWith(window.location.origin)) {
+    e.preventDefault();
+    navigate(link.pathname);
+  }
+});
+
+window.addEventListener("popstate", handleLocation);
 handleLocation();

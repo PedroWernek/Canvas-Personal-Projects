@@ -11,3 +11,15 @@ export function distance(x1, y1, x2, y2) {
   const yDist = y2 - y1;
   return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
+
+export function handleResize(canvas) {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+export function handleMouseMove(event, canvas) {
+  return {
+    x: event.clientX - canvas.offsetLeft,
+    y: event.clientY,
+  };
+}

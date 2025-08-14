@@ -1,9 +1,13 @@
-import { randomIntFromRange, randomColor } from "../../utils/utils.js";
+import {
+  randomIntFromRange,
+  randomColor,
+  handleResize,
+} from "../../utils/utils.js";
 import Ball from "./Ball.js";
 
 // A função 'run' é o ponto de entrada que será chamado pelo loader principal
+
 export function run(canvas, context) {
-  const c = context;
   let animationFrameId;
 
   // --- Constantes do "Mundo" ---
@@ -14,7 +18,11 @@ export function run(canvas, context) {
 
   // --- Funções ---
   function init() {
-    handleResize();
+    handleResize(canvas);
+    initBalls();
+  }
+
+  function initBalls() {
     ballArray = [];
     for (let i = 0; i < 100; i++) {
       const radius = randomIntFromRange(10, 30);
@@ -22,7 +30,7 @@ export function run(canvas, context) {
       const y = randomIntFromRange(0, canvas.height - radius * 2); // Nasce mais para cima
       const velX = randomIntFromRange(-2, 2);
       ballArray.push(
-        new Ball(x, y, velX, 2, radius, randomColor(COLORS), c, canvas),
+        new Ball(x, y, velX, 2, radius, randomColor(COLORS), context, canvas),
       );
     }
   }
@@ -30,19 +38,21 @@ export function run(canvas, context) {
   // A função animate não precisa de argumentos aqui
   function animate() {
     animationFrameId = requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Passa as constantes do mundo para o método update de cada bola
     ballArray.forEach((ball) => ball.update(GRAVITY, FRICTION));
   }
 
   // --- Listeners de Evento ---
-  const handleResize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  };
 
-  const handleClick = () => init();
+  const handleClick = () => {
+    ballArray.forEach((ball) => {
+      for (let i = 0; i < 10; i++) {
+        ball.velY -= randomIntFromRange(0, 5);
+      }
+    });
+  };
 
   window.addEventListener("resize", handleResize);
   window.addEventListener("click", handleClick);
@@ -51,11 +61,9 @@ export function run(canvas, context) {
   init();
   animate();
 
-  // --- Função de Limpeza ---
-  return function cleanup() {
+  return () => {
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener("resize", handleResize);
     window.removeEventListener("click", handleClick);
-    c.clearRect(0, 0, canvas.width, canvas.height);
   };
 }

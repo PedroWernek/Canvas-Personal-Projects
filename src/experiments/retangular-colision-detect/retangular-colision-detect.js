@@ -2,7 +2,7 @@ import utils from "./js/utils.js";
 
 import setupCanvas from "../../common/canvas-setup.js";
 
-const { canvas, c } = setupCanvas();
+const { canvas, context } = setupCanvas();
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -37,11 +37,11 @@ class Object {
   }
 
   draw() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fillStyle = this.color;
+    context.fill();
+    context.closePath();
   }
 
   update() {
@@ -62,10 +62,10 @@ function init() {
 // Animation Loop
 function animate() {
   requestAnimationFrame(animate);
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
   //fundo
-  c.fillStyle = "#1A1A23";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "#1A1A23";
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
   if (
     mouse.x + 100 >= canvas.width / 2 - 50 &&
@@ -76,11 +76,11 @@ function animate() {
     console.log("colidiu");
   }
   //retangulo 1
-  c.fillStyle = "#E86262";
-  c.fillRect(mouse.x, mouse.y, 100, 100);
+  context.fillStyle = "#E86262";
+  context.fillRect(mouse.x, mouse.y, 100, 100);
 
-  c.fillStyle = "#92ABEA";
-  c.fillRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
+  context.fillStyle = "#92ABEA";
+  context.fillRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
 }
 
 init();

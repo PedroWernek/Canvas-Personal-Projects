@@ -1,37 +1,17 @@
-import utils from "../utils.js";
+import {
+  randomIntFromRange,
+  randomColor,
+  handleResize,
+  handleMouseMove,
+} from "../../utils/utils.js";
 
 export function run(canvas, context) {
-  const c = context;
-  let animationFrameId;
-
   const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2,
   };
 
   const colors = ["#00bdff", "#4d39ce", "#088eff"];
-
-  // Event Listeners
-  addEventListener("mousemove", (event) => {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-  });
-
-  addEventListener("resize", () => {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-
-    init();
-  });
-
-  let partRadius = 1;
-  addEventListener("mousedown", (e) => {
-    partRadius += 1;
-  });
-
-  addEventListener("mouseup", (e) => {
-    partRadius = 1;
-  });
 
   class Particle {
     constructor(x, y, radius, color) {
@@ -43,19 +23,19 @@ export function run(canvas, context) {
       this.color = color;
       this.radians = Math.random() * Math.PI * 2; // Random initial angle
       this.velocity = 0.05; // Speed of rotation
-      this.distanceFromCenter = utils.randomIntFromRange(50, 120); //randomizar a distancia do centro
-      this.lastMousePoint = { x: x, y: y }; // ultima posição do mouse
+      this.distanceFromCenter = randomIntFromRange(50, 120); //randomizar a distancia do centro
+      this.lastMousePoint = { x: mouse.x, y: mouse.y }; // ultima posição do mouse
     }
 
     draw(lastPoint, partRadius) {
       //desenhando linhas ao inves de círculos
-      c.beginPath();
-      c.strokeStyle = this.color;
-      c.lineWidth = partRadius;
-      c.moveTo(lastPoint.x, lastPoint.y);
-      c.lineTo(this.x, this.y);
-      c.stroke();
-      c.closePath();
+      context.beginPath();
+      context.strokeStyle = this.color;
+      context.lineWidth = partRadius;
+      context.moveTo(lastPoint.x, lastPoint.y);
+      context.lineTo(this.x, this.y);
+      context.stroke();
+      context.closePath();
     }
 
     update(partRadius) {
@@ -82,6 +62,7 @@ export function run(canvas, context) {
   // Implementation
   let particles;
   function init() {
+    handleResize(canvas);
     particles = [];
 
     for (let i = 0; i < 50; i++) {
@@ -90,41 +71,62 @@ export function run(canvas, context) {
           canvas.width / 2,
           canvas.height / 2,
           Math.random() * 2 + 1,
-          utils.randomColor(colors),
+          randomColor(colors),
         ),
       );
     }
   }
+
+  // Event Listeners
+  addEventListener("mousemove", (e) => {
+    const mouseHandler = handleMouseMove(e, canvas);
+    mouse.x = mouseHandler.x;
+    mouse.y = mouseHandler.y;
+  });
+
+  addEventListener("resize", () => {
+    init();
+  });
+
+  let partRadius = 1;
+  addEventListener("mousedown", (e) => {
+    partRadius += 1;
+  });
+
+  addEventListener("mouseup", (e) => {
+    partRadius = 1;
+  });
 
   // Animation Loop
   function animate() {
     requestAnimationFrame(animate);
 
     //cria o efeito de trilha
-    c.fillStyle = "rgba(255, 255, 255, 0.09)";
-    c.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "rgba(255, 255, 255, 0.09)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // c.clearRect(0, 0, canvas.width, canvas.height);
+    // context.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach((particle) => {
       particle.update(partRadius);
     });
   }
 
-  const handleResize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    init();
-  };
-
-  window.addEventListener("resize", handleResize);
-
   init();
   animate();
 
-  return function cleanup() {
-    cancelAnimationFrame(animationFrameId);
-    window.removeEventListener("resize", handleResize);
-    window.removeEventListener("click", handleClick);
-    c.clearRect(0, 0, canvas.width, canvas.height);
+  return () => {
+    cancelAnimationFrame(animate);
+    window.removeEventListener("mousemove", (e) => {
+      const mouseHandler = handleMouseMove(e, canvas);
+      mouse.x = mouseHandler.x;
+      mouse.y = mouseHandler.y;
+    });
+    window.removeEventListener("resize", init);
+    window.removeEventListener("mousedown", () => {
+      partRadius += 1;
+    });
+    window.removeEventListener("mouseup", () => {
+      partRadius = 1;
+    });
   };
 }

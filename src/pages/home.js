@@ -1,4 +1,4 @@
-import { experimentsArray } from "../data/experimentsLocations";
+import { experimentsArray } from "../data/experimentsLocations.js";
 
 export function renderHomePage(app) {
   app.innerHTML = `
@@ -8,9 +8,9 @@ export function renderHomePage(app) {
         ${Object.keys(experimentsArray)
           .map(
             (key) => `
-          <a href="#${key}" class="project-card">
-            <h2>${experiments[key].title}</h2>
-            <p>${experiments[key].description}</p>
+          <a href="${key}" class="project-card">
+            <h2>${experimentsArray[key].title}</h2>
+            <p>${experimentsArray[key].description}</p>
           </a>
         `,
           )
@@ -18,5 +18,5 @@ export function renderHomePage(app) {
       </div>
     </div>
   `;
-  document.title = "Home";
+  document.title = "Home | Canvas Projects";
 }

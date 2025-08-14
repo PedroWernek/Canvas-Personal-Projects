@@ -1,11 +1,3 @@
-import utils from "../utils.js";
-import setupCanvas from "../../common/canvas-setup.js";
-
-const { canvas, c } = setupCanvas();
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
 const mouse = {
   x: innerWidth / 2,
   y: innerHeight / 2,
@@ -20,8 +12,7 @@ addEventListener("mousemove", (event) => {
 });
 
 addEventListener("resize", () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+  handleResize();
 
   init();
 });
@@ -36,11 +27,11 @@ class Circle {
   }
 
   draw() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fillStyle = this.color;
+    context.fill();
+    context.closePath();
   }
 
   update() {
@@ -71,7 +62,7 @@ function init() {
 // Animation Loop
 function animate() {
   requestAnimationFrame(animate);
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
   circle1.update();
   circle2.x = mouse.x;
@@ -86,6 +77,11 @@ function animate() {
     circle1.color = "red";
   }
 }
+
+const handleResize = () => {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+};
 
 init();
 animate();

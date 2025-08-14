@@ -8,17 +8,17 @@ export default class Ball {
     this.velY = velY;
     this.radius = radius;
     this.color = color;
-    this.c = context; // O contexto 2D para desenhar
+    this.context = context; // O contexto 2D para desenhar
     this.canvas = canvas; // A referência ao elemento canvas
   }
 
   draw() {
-    this.c.beginPath();
-    this.c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    this.c.fillStyle = this.color;
-    this.c.fill();
-    this.c.stroke();
-    this.c.closePath();
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    this.context.fillStyle = this.color;
+    this.context.fill();
+    this.context.stroke();
+    this.context.closePath();
   }
 
   update(gravity, friction) {

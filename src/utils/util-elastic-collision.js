@@ -96,4 +96,4 @@ function resolveCollision(particle, otherParticle) {
   }
 }
 
-export { rotate, resolveCollision };
+export default { rotate, resolveCollision };
