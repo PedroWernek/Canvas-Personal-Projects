@@ -1,9 +1,8 @@
 class Particle {
   constructor(x, y, radius, color) {
-    //posição central
     this.x = x;
     this.y = y;
-    this.velX = (Math.random() - 0.5) * 2; // velocidade horizontal
+    this.velX = (Math.random() - 0.5) * 2;
     this.velY = (Math.random() - 0.5) * 2;
     this.radius = radius;
     this.color = color;

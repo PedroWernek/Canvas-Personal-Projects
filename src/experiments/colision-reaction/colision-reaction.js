@@ -10,21 +10,20 @@ import Particle from "./Particle.js";
 export function run(canvas, context) {
   let colors = ["#2185C5", "#7ECEFD", "#ffbb3eff", "#FF7F66"];
 
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-
   const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2,
   };
 
   // Event Listeners
-  addEventListener("mousemove", (e) => handleMouseMove(e, canvas));
+  addEventListener("mousemove", (e) => {
+    const mouseHandler = handleMouseMove(e, canvas);
+    mouse.x = mouseHandler.x;
+    mouse.y = mouseHandler.y;
+  });
 
   addEventListener("resize", () => {
     handleResize(canvas);
-
-    init();
   });
 
   // Objects
@@ -32,10 +31,11 @@ export function run(canvas, context) {
   // Implementation
   let particles;
   function init() {
+    handleResize(canvas);
     try {
       particles = [];
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 300; i++) {
         let radius = 10;
         let x = randomIntFromRange(radius, innerWidth - radius);
         let y = randomIntFromRange(radius, innerHeight - radius);

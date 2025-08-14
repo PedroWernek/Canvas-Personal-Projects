@@ -14,14 +14,14 @@ export const experimentsArray = {
     title: "Circular Motion",
     description: "Partículas se movendo em círculos.",
   },
-  // "/collision-test": {
-  //   path: "/src/experiments/colision-test/colision-test.js",
-  //   title: "Collision Test",
-  //   description: "Teste de colisão entre círculos.",
-  // },
-  // "/retangular-colision-detect": {
-  //   path: "/src/experiments/retangular-colision-detect/retangular-colision-detect.js",
-  //   title: "Rectangular Collision",
-  //   description: "Detecção de colisão entre retângulos.",
-  // },
+  "/collision-test": {
+    path: "/src/experiments/colision-test/colision-test.js",
+    title: "Collision Test",
+    description: "Teste de colisão entre círculos.",
+  },
+  "/retangular-colision-detect": {
+    path: "/src/experiments/retangular-colision-detect/retangular-colision-detect.js",
+    title: "Rectangular Collision",
+    description: "Detecção de colisão entre retângulos.",
+  },
 };
