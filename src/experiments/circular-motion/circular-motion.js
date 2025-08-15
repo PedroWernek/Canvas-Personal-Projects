@@ -5,6 +5,7 @@ import { runV2 } from "./circular-motion-v2.js";
 
 export function run(canvas, context) {
   const gui = new dat.GUI();
+  let cleanupCurrentMode;
 
   handleResize(canvas);
 
@@ -20,11 +21,21 @@ export function run(canvas, context) {
     });
 
   function init() {
+    if (cleanupCurrentMode) {
+      cleanupCurrentMode();
+    }
     if (mode.switch) {
-      runV1(canvas, context);
+      cleanupCurrentMode = runV1(canvas, context);
     } else {
-      runV2(canvas, context);
+      cleanupCurrentMode = runV2(canvas, context);
     }
   }
   init();
+
+  return () => {
+    if (cleanupCurrentMode) {
+      cleanupCurrentMode();
+    }
+    gui.destroy();
+  };
 }
