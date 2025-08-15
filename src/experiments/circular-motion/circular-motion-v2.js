@@ -12,9 +12,11 @@ export function runV2(canvas, context) {
   };
 
   const colors = ["#00bdff", "#4d39ce", "#088eff"];
-
-  // Implementation
   let particles;
+  let animationId; // Para guardar o ID da animação
+  let mouseDown = false;
+  let partRadius = 1;
+
   function init() {
     handleResize(canvas);
     particles = [];
@@ -32,38 +34,39 @@ export function runV2(canvas, context) {
     }
   }
 
-  // Event Listeners
-  addEventListener("mousemove", (e) => {
+  // Funções de evento nomeadas
+  const onMouseMove = (e) => {
     const mouseHandler = handleMouseMove(e, canvas);
     mouse.x = mouseHandler.x;
     mouse.y = mouseHandler.y;
-  });
+  };
 
-  addEventListener("resize", () => {
+  const onResize = () => {
     init();
-  });
+  };
 
-  let partRadius = 1;
-  let mouseDown = false;
-  addEventListener("mousedown", (e) => {
+  const onMouseDown = () => {
     partRadius += 2;
     mouseDown = true;
-  });
+  };
 
-  addEventListener("mouseup", (e) => {
+  const onMouseUp = () => {
     partRadius = 1;
     mouseDown = false;
-  });
+  };
 
-  // Animation Loop
+  // Adiciona os listeners
+  addEventListener("mousemove", onMouseMove);
+  addEventListener("resize", onResize);
+  addEventListener("mousedown", onMouseDown);
+  addEventListener("mouseup", onMouseUp);
+
   function animate() {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
-    //cria o efeito de trilha
     context.fillStyle = "rgba(255, 255, 255, 0.09)";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // context.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach((particle) => {
       particle.update(partRadius, mouse, mouseDown, context, canvas, particles);
     });
@@ -72,19 +75,12 @@ export function runV2(canvas, context) {
   init();
   animate();
 
+  // Função de limpeza
   return () => {
-    cancelAnimationFrame(animate);
-    window.removeEventListener("mousemove", (e) => {
-      const mouseHandler = handleMouseMove(e, canvas);
-      mouse.x = mouseHandler.x;
-      mouse.y = mouseHandler.y;
-    });
-    window.removeEventListener("resize", init);
-    window.removeEventListener("mousedown", () => {
-      partRadius += 1;
-    });
-    window.removeEventListener("mouseup", () => {
-      partRadius = 1;
-    });
+    cancelAnimationFrame(animationId);
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("resize", onResize);
+    window.removeEventListener("mousedown", onMouseDown);
+    window.removeEventListener("mouseup", onMouseUp);
   };
 }

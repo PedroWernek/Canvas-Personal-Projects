@@ -1,4 +1,5 @@
-import { handleResize } from "../../utils/utils";
+import { handleResize, hex2rgb } from "../../utils/utils";
+import { guiSineWave } from "../../data/guiSineWave";
 import * as dat from "dat.gui";
 
 export function run(canvas, context) {
@@ -11,8 +12,10 @@ export function run(canvas, context) {
     largura: 0.01,
     ampliture: 100,
     frequencia: 0.05,
-    clear: true,
+    clear: false,
     BGcolor: "#f0f0f2",
+    LineColor: "#000000",
+    opacity: 1,
   };
 
   const yController = gui.add(wave, "y", 0, canvas.height);
@@ -20,13 +23,23 @@ export function run(canvas, context) {
   gui.add(wave, "ampliture", -300, 300);
   gui.add(wave, "frequencia", 0.01, 1);
   gui.add(wave, "clear");
+  gui.add(wave, "opacity", 0, 1);
   gui
     .addColor(wave, "BGcolor")
     .onChange((value) => {
       wave.BGcolor = value;
     })
     .name("Background Color");
+  gui
+    .addColor(wave, "LineColor")
+    .onChange((value) => {
+      wave.LineColor = value;
+      context.strokeStyle = hex2rgb(value);
+    })
+    .name("Line Color");
 
+  gui.remember(wave);
+  gui.remember(guiSineWave(canvas));
   function init() {
     handleResize(canvas);
     yController.max(canvas.height); // atualiza limite
@@ -37,10 +50,16 @@ export function run(canvas, context) {
 
   function animate() {
     animationId = requestAnimationFrame(animate);
-
+    context.strokeStyle = wave.LineColor;
     if (wave.clear) {
       context.fillStyle = wave.BGcolor;
+      context.globalAlpha = wave.opacity; // Define a opacidade
       context.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+      context.fillStyle = wave.BGcolor;
+      context.globalAlpha = 0.1;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.globalAlpha = 1;
     }
 
     context.beginPath();

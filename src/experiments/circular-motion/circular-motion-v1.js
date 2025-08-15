@@ -13,9 +13,9 @@ export function runV1(canvas, context) {
 
   let partRadius = 1;
   const colors = ["#00bdff", "#4d39ce", "#088eff"];
-
-  // Implementation
   let particles;
+  let animationId; // Para guardar o ID da animação
+
   function init() {
     handleResize(canvas);
     particles = [];
@@ -33,6 +33,7 @@ export function runV1(canvas, context) {
     }
   }
 
+  // Funções de evento nomeadas
   const onMouseMove = (e) => {
     const mouseHandler = handleMouseMove(e, canvas);
     mouse.x = mouseHandler.x;
@@ -51,20 +52,18 @@ export function runV1(canvas, context) {
     partRadius = 1;
   };
 
+  // Adiciona os listeners
   addEventListener("mousemove", onMouseMove);
   addEventListener("resize", onResize);
   addEventListener("mousedown", onMouseDown);
   addEventListener("mouseup", onMouseUp);
 
-  // Animation Loop
   function animate() {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
-    //cria o efeito de trilha
     context.fillStyle = "rgba(255, 255, 255, 0.09)";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // context.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach((particle) => {
       particle.update(partRadius, mouse, context);
     });
@@ -73,8 +72,9 @@ export function runV1(canvas, context) {
   init();
   animate();
 
+  // Função de limpeza
   return () => {
-    cancelAnimationFrame(animate);
+    cancelAnimationFrame(animationId);
     window.removeEventListener("mousemove", onMouseMove);
     window.removeEventListener("resize", onResize);
     window.removeEventListener("mousedown", onMouseDown);
