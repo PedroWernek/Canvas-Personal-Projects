@@ -131,11 +131,6 @@ body {
   color: white;
 }
 
-.sidebar li {
-  display: flex;
-  margin-bottom: 0.5rem;
-}
-
 .home-button {
   display: flex;
   align-items: center;

@@ -1,6 +1,6 @@
 import { randomIntFromRange } from "../../utils/utils.js";
 
-export class Particle {
+export class ParticleV1 {
   constructor(x, y, radius, color, mouse) {
     //posição central
     this.x = x;

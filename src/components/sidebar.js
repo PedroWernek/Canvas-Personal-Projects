@@ -1,5 +1,5 @@
 import { experimentsArray } from "../data/experimentsLocations.js";
-import "./swich.css";
+
 export function buildSidebar(path) {
   const experiments = experimentsArray;
 
@@ -16,18 +16,11 @@ export function buildSidebar(path) {
           .map(
             (key) => `
           <li>
-  <a href="${key}" class="${key === path ? "active" : ""}">
-    ${experimentsArray[key].title}
-    ${
-      experimentsArray[key].switch
-        ? `<label class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-           </label>`
-        : ""
-    }
-  </a>
-</li>
+            <a href="${key}" class="${key === path ? "active" : ""}">${
+              experimentsArray[key].title
+            }</a>
+            
+          </li>
         `,
           )
           .join("")}

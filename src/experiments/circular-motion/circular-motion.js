@@ -1,83 +1,30 @@
-import {
-  randomColor,
-  handleResize,
-  handleMouseMove,
-} from "../../utils/utils.js";
-import { Particle } from "./Particle.js";
+import * as dat from "dat.gui";
+import { handleResize } from "../../utils/utils.js";
+import { runV1 } from "./circular-motion-v1.js";
+import { runV2 } from "./circular-motion-v2.js";
 
 export function run(canvas, context) {
-  const mouse = {
-    x: innerWidth / 2,
-    y: innerHeight / 2,
+  const gui = new dat.GUI();
+
+  handleResize(canvas);
+
+  const mode = {
+    switch: true,
   };
 
-  let partRadius = 1;
-  const colors = ["#00bdff", "#4d39ce", "#088eff"];
+  gui
+    .add(mode, "switch")
+    .name("Switch Mode")
+    .onChange(() => {
+      init();
+    });
 
-  // Implementation
-  let particles;
   function init() {
-    handleResize(canvas);
-    particles = [];
-
-    for (let i = 0; i < 50; i++) {
-      particles.push(
-        new Particle(
-          canvas.width / 2,
-          canvas.height / 2,
-          Math.random() * 2 + 1,
-          randomColor(colors),
-          mouse,
-        ),
-      );
+    if (mode.switch) {
+      runV1(canvas, context);
+    } else {
+      runV2(canvas, context);
     }
   }
-
-  const onMouseMove = (e) => {
-    const mouseHandler = handleMouseMove(e, canvas);
-    mouse.x = mouseHandler.x;
-    mouse.y = mouseHandler.y;
-  };
-
-  const onResize = () => {
-    init();
-  };
-
-  const onMouseDown = () => {
-    partRadius += 1;
-  };
-
-  const onMouseUp = () => {
-    partRadius = 1;
-  };
-
-  addEventListener("mousemove", onMouseMove);
-  addEventListener("resize", onResize);
-  addEventListener("mousedown", onMouseDown);
-  addEventListener("mouseup", onMouseUp);
-
-  // Animation Loop
-  function animate() {
-    requestAnimationFrame(animate);
-
-    //cria o efeito de trilha
-    context.fillStyle = "rgba(255, 255, 255, 0.09)";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    // context.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((particle) => {
-      particle.update(partRadius, mouse, context);
-    });
-  }
-
   init();
-  animate();
-
-  return () => {
-    cancelAnimationFrame(animate);
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("resize", onResize);
-    window.removeEventListener("mousedown", onMouseDown);
-    window.removeEventListener("mouseup", onMouseUp);
-  };
 }
