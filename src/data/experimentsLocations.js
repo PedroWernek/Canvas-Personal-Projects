@@ -13,6 +13,7 @@ export const experimentsArray = {
     path: "/src/experiments/circular-motion/circular-motion.js",
     title: "Circular Motion",
     description: "Partículas se movendo em círculos.",
+    switch: true,
   },
   "/collision-test": {
     path: "/src/experiments/colision-test/colision-test.js",
