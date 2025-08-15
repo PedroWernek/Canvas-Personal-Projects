@@ -9,19 +9,6 @@ export function run(canvas, context) {
 
   const colors = ["#2185C5", "#7ECEFD", "#FFF6E5", "#FF7F66"];
 
-  // Event Listeners
-  addEventListener("mousemove", (e) => {
-    const mouseHandler = handleMouseMove(e, canvas);
-    mouse.x = mouseHandler.x;
-    mouse.y = mouseHandler.y;
-  });
-
-  addEventListener("resize", () => {
-    init();
-  });
-
-  // Objects
-
   function getDistance(x1, y1, x2, y2) {
     let xDistance = x2 - x1;
     let yDistance = y2 - y1;
@@ -62,11 +49,26 @@ export function run(canvas, context) {
     }
   }
 
+  const onMouseMove = (e) => {
+    const mouseHandler = handleMouseMove(e, canvas);
+    mouse.x = mouseHandler.x;
+    mouse.y = mouseHandler.y;
+  };
+
+  const onResize = () => {
+    init();
+  };
+
+  // 2. Adicione os listeners usando as referências
+  addEventListener("mousemove", onMouseMove);
+  addEventListener("resize", onResize);
+
   init();
   animate();
 
   return () => {
     cancelAnimationFrame(animate);
-    document.removeEventListener("resize", handleResize);
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("resize", onResize);
   };
 }

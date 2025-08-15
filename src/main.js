@@ -4,11 +4,17 @@ import { renderExperimentPage } from "./pages/experiment.js";
 // Vite encontra todos os módulos de experimentos
 
 const app = document.getElementById("app");
+let cleanupCurrentPage = null;
 
 // Renderiza a página do experimento
 
 // Decide qual página renderizar
 function handleLocation() {
+  if (cleanupCurrentPage) {
+    cleanupCurrentPage();
+    cleanupCurrentPage = null;
+  }
+
   const path = window.location.pathname;
   if (path === "/" || path === "/index.html") {
     renderHomePage(app);
@@ -27,7 +33,6 @@ function navigate(path) {
 document.addEventListener("click", (e) => {
   const link = e.target.closest("a");
   if (link && link.href.startsWith(window.location.origin)) {
-    e.preventDefault();
     navigate(link.pathname);
   }
 });

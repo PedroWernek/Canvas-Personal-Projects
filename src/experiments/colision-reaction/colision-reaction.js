@@ -15,20 +15,6 @@ export function run(canvas, context) {
     y: innerHeight / 2,
   };
 
-  // Event Listeners
-  addEventListener("mousemove", (e) => {
-    const mouseHandler = handleMouseMove(e, canvas);
-    mouse.x = mouseHandler.x;
-    mouse.y = mouseHandler.y;
-  });
-
-  addEventListener("resize", () => {
-    handleResize(canvas);
-  });
-
-  // Objects
-
-  // Implementation
   let particles;
   function init() {
     handleResize(canvas);
@@ -73,12 +59,25 @@ export function run(canvas, context) {
     });
   }
 
+  const onMouseMove = (e) => {
+    const mouseHandler = handleMouseMove(e, canvas);
+    mouse.x = mouseHandler.x;
+    mouse.y = mouseHandler.y;
+  };
+
+  const onResize = () => {
+    handleResize(canvas);
+  };
+
+  addEventListener("mousemove", onMouseMove);
+  addEventListener("resize", onResize);
+
   init();
   animate();
 
   return () => {
     cancelAnimationFrame(animate);
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("resize", handleResize);
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("resize", onResize);
   };
 }

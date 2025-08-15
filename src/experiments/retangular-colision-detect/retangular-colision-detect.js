@@ -8,17 +8,6 @@ export function run(canvas, context) {
 
   const colors = ["#2185C5", "#7ECEFD", "#FFF6E5", "#FF7F66"];
 
-  // Event Listeners
-  addEventListener("mousemove", (e) => {
-    const mouseHandler = handleMouseMove(e, canvas);
-    mouse.x = mouseHandler.x - 50;
-    mouse.y = mouseHandler.y - 50;
-  });
-
-  addEventListener("resize", () => {
-    init();
-  });
-
   // Implementation
   let objects;
   function init() {
@@ -54,11 +43,26 @@ export function run(canvas, context) {
     context.fillRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
   }
 
+  const onMouseMove = (e) => {
+    const mouseHandler = handleMouseMove(e, canvas);
+    mouse.x = mouseHandler.x - 50;
+    mouse.y = mouseHandler.y - 50;
+  };
+
+  const onResize = () => {
+    init();
+  };
+
+  // 2. Adicione os listeners usando as referências
+  addEventListener("mousemove", onMouseMove);
+  addEventListener("resize", onResize);
+
   init();
   animate();
 
   return () => {
     cancelAnimationFrame(animate);
-    document.removeEventListener("resize", handleResize);
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("resize", onResize);
   };
 }

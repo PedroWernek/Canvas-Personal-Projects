@@ -24,4 +24,9 @@ export const experimentsArray = {
     title: "Rectangular Collision",
     description: "Detecção de colisão entre retângulos.",
   },
+  "/sine-waves": {
+    path: "/src/experiments/sine-waves/sine-waves.js",
+    title: "Sine Waves",
+    description: "Desenho de ondas senoidais.",
+  },
 };

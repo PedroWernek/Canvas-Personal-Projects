@@ -29,6 +29,8 @@ export function renderHomePage(app) {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+  let animationFrameId;
+
   const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2,
@@ -100,16 +102,25 @@ export function renderHomePage(app) {
     });
   }
 
-  window.addEventListener("resize", () => {
+  const onResize = () => {
     handleResize(canvas);
     init();
-  });
+  };
 
-  window.addEventListener("mousemove", (e) => {
+  const onMouseMove = (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
-  });
+  };
+
+  window.addEventListener("resize", onResize);
+  window.addEventListener("mousemove", onMouseMove);
 
   init();
   animate();
+
+  return () => {
+    cancelAnimationFrame(animationFrameId);
+    window.removeEventListener("resize", onResize);
+    window.removeEventListener("mousemove", onMouseMove);
+  };
 }
