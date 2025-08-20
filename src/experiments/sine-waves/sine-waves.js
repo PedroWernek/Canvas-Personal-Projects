@@ -1,16 +1,16 @@
-import { handleResize, hex2rgb } from "../../utils/utils";
-import { guiSineWave } from "../../data/guiSineWave";
+import { handleResize } from "../../utils/utils";
+import { defPresets } from "../../data/guiSineWave";
 import * as dat from "dat.gui";
 
 export function run(canvas, context) {
   const gui = new dat.GUI();
 
-  handleResize(canvas); // garante altura correta antes de criar slider
+  handleResize(canvas);
 
   const wave = {
     y: canvas.height / 2,
     largura: 0.01,
-    ampliture: 100,
+    amplitude: 100,
     frequencia: 0.05,
     clear: false,
     BGcolor: "#f0f0f2",
@@ -18,31 +18,32 @@ export function run(canvas, context) {
     opacity: 1,
   };
 
-  const yController = gui.add(wave, "y", 0, canvas.height);
-  gui.add(wave, "largura", -0.1, 0.1);
-  gui.add(wave, "ampliture", -300, 300);
-  gui.add(wave, "frequencia", 0.01, 1);
-  gui.add(wave, "clear");
-  gui.add(wave, "opacity", 0, 1);
-  gui
-    .addColor(wave, "BGcolor")
-    .onChange((value) => {
-      wave.BGcolor = value;
-    })
-    .name("Background Color");
-  gui
-    .addColor(wave, "LineColor")
-    .onChange((value) => {
-      wave.LineColor = value;
-      context.strokeStyle = hex2rgb(value);
-    })
-    .name("Line Color");
+  // Objeto para os presets
+  const presets = defPresets(wave, canvas, gui);
 
-  gui.remember(wave);
-  gui.remember(guiSineWave(canvas));
+  // Chame o remember ANTES de adicionar os controles.
+
+  const waveFolder = gui.addFolder("Wave Properties");
+  const yController = waveFolder.add(wave, "y", 0, canvas.height);
+  waveFolder.add(wave, "largura", -0.1, 0.1);
+  waveFolder.add(wave, "amplitude", -300, 300);
+  waveFolder.add(wave, "frequencia", 0.01, 1);
+  waveFolder.add(wave, "clear");
+  waveFolder.add(wave, "opacity", 0, 1);
+
+  const hueFolder = gui.addFolder("Colors");
+  hueFolder.addColor(wave, "BGcolor").name("Background Color");
+  hueFolder.addColor(wave, "LineColor").name("Line Color");
+
+  // Adicionando a pasta de presets
+  const presetFolder = gui.addFolder("Presets");
+  for (const preset in presets) {
+    presetFolder.add(presets, preset);
+  }
+
   function init() {
     handleResize(canvas);
-    yController.max(canvas.height); // atualiza limite
+    yController.max(canvas.height);
   }
 
   let animationId;
@@ -53,7 +54,7 @@ export function run(canvas, context) {
     context.strokeStyle = wave.LineColor;
     if (wave.clear) {
       context.fillStyle = wave.BGcolor;
-      context.globalAlpha = wave.opacity; // Define a opacidade
+      context.globalAlpha = wave.opacity;
       context.fillRect(0, 0, canvas.width, canvas.height);
     } else {
       context.fillStyle = wave.BGcolor;
@@ -68,7 +69,7 @@ export function run(canvas, context) {
     for (let i = 0; i < canvas.width; i++) {
       context.lineTo(
         i,
-        wave.y + Math.sin(i * wave.largura + incremento) * wave.ampliture,
+        wave.y + Math.sin(i * wave.largura + incremento) * wave.amplitude,
       );
     }
     context.stroke();
@@ -82,6 +83,7 @@ export function run(canvas, context) {
 
   window.addEventListener("resize", onResize);
 
+  init();
   animate();
 
   return () => {
