@@ -1,4 +1,4 @@
-import { buildSidebar } from "../components/Sidebar.js";
+import { buildSidebar } from "../components/sidebarBuilder.js";
 import { experimentsArray } from "../data/experimentsLocations.js";
 const experimentModules = import.meta.glob("/src/experiments/**/*.js");
 
