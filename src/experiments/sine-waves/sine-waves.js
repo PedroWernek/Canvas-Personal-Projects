@@ -1,5 +1,4 @@
 import { handleResize } from "../../utils/utils";
-import { defPresets } from "../../data/guiSineWave";
 import * as dat from "dat.gui";
 
 export function run(canvas, context) {
@@ -11,35 +10,43 @@ export function run(canvas, context) {
     y: canvas.height / 2,
     largura: 0.01,
     amplitude: 100,
-    frequencia: 0.05,
-    clear: false,
-    BGcolor: "#f0f0f2",
-    LineColor: "#000000",
-    opacity: 1,
+    frequencia: 0.01,
   };
 
-  // Objeto para os presets
-  const presets = defPresets(wave, canvas, gui);
+  const strokeColor = {
+    h: 200,
+    s: 50,
+    l: 50,
+  };
+
+  const backgroundColor = {
+    r: 36,
+    g: 36,
+    b: 36,
+    a: 0.01,
+  };
 
   // Chame o remember ANTES de adicionar os controles.
 
-  const waveFolder = gui.addFolder("Wave Properties");
+  const waveFolder = gui.addFolder("Wave");
   const yController = waveFolder.add(wave, "y", 0, canvas.height);
   waveFolder.add(wave, "largura", -0.1, 0.1);
   waveFolder.add(wave, "amplitude", -300, 300);
   waveFolder.add(wave, "frequencia", 0.01, 1);
-  waveFolder.add(wave, "clear");
-  waveFolder.add(wave, "opacity", 0, 1);
+  waveFolder.open();
 
-  const hueFolder = gui.addFolder("Colors");
-  hueFolder.addColor(wave, "BGcolor").name("Background Color");
-  hueFolder.addColor(wave, "LineColor").name("Line Color");
+  const strokeFolder = gui.addFolder("Stroke");
+  strokeFolder.add(strokeColor, "h", 0, 255);
+  strokeFolder.add(strokeColor, "s", 0, 100);
+  strokeFolder.add(strokeColor, "l", 0, 100);
+  strokeFolder.open();
 
-  // Adicionando a pasta de presets
-  const presetFolder = gui.addFolder("Presets");
-  for (const preset in presets) {
-    presetFolder.add(presets, preset);
-  }
+  const backgroundFolder = gui.addFolder("background");
+  backgroundFolder.add(backgroundColor, "r", 0, 255);
+  backgroundFolder.add(backgroundColor, "g", 0, 255);
+  backgroundFolder.add(backgroundColor, "b", 0, 255);
+  backgroundFolder.add(backgroundColor, "a", 0, 1);
+  backgroundFolder.open();
 
   function init() {
     handleResize(canvas);
@@ -47,21 +54,12 @@ export function run(canvas, context) {
   }
 
   let animationId;
-  let incremento = wave.frequencia;
 
+  let incremento = wave.frequencia;
   function animate() {
     animationId = requestAnimationFrame(animate);
-    context.strokeStyle = wave.LineColor;
-    if (wave.clear) {
-      context.fillStyle = wave.BGcolor;
-      context.globalAlpha = wave.opacity;
-      context.fillRect(0, 0, canvas.width, canvas.height);
-    } else {
-      context.fillStyle = wave.BGcolor;
-      context.globalAlpha = 0.1;
-      context.fillRect(0, 0, canvas.width, canvas.height);
-      context.globalAlpha = 1;
-    }
+    context.fillStyle = `rgba(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b}, ${backgroundColor.a})`;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     context.beginPath();
     context.moveTo(0, wave.y);
@@ -69,12 +67,20 @@ export function run(canvas, context) {
     for (let i = 0; i < canvas.width; i++) {
       context.lineTo(
         i,
-        wave.y + Math.sin(i * wave.largura + incremento) * wave.amplitude,
+        wave.y +
+          Math.sin(i * wave.largura + incremento) *
+            wave.amplitude *
+            Math.sin(incremento),
       );
     }
+
+    context.strokeStyle = `hsl(${Math.abs(
+      strokeColor.h * Math.sin(incremento),
+    )}, ${strokeColor.s}%, ${strokeColor.l}%)`;
     context.stroke();
 
     incremento += wave.frequencia;
+    // console.log(incremento);
   }
 
   function onResize() {
